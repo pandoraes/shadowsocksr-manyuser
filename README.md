@@ -50,12 +50,13 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 添加 supervisor 开机启动： `systemctl enable supervisor (centos6:chkconfig --add supervisord)`
 * 日志 ：`tail -f /var/log/sslog.txt`
 
-
-# 问题反馈
-
-携带 ss.log 文件提交 issue
-
 # 更新
+## 2018-02-05
+* 更新libsodium 到1.16稳定版 并且安装到/usr/local/libsodium
+* 重新修改manyuser 路径
+* 增加脚本所在目录
+* 修复bug
+
 ## 2017-12-21
 V4.0
 * 添加 基本init选项，可以直接通过脚本控制后端启动，暂停等基本功能

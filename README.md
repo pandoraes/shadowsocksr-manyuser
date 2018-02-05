@@ -1,23 +1,16 @@
-# sspanel v3 glzjin 后端一键安装配置管理脚本
-
+# sspanel+节点 v5 后端一键安装配置管理脚本
+* 感谢glzjin wulabing提供的代码 
 * 适用于glzjin面板ssr后端的一键安装脚本 实现输入配置信息、以及全自动安装，配置一键修改，一键启动暂停等功能 支持 modwebapi 及 glzjinmod（mysql connect）
-* 旧版支持 Ubuntu14.04+ / Centos 6+ / Debian7+ 
 * 新版(supervisor版本)支持 Ubuntu16.04+ / Centos 6+ / Debian 8+
 * 默认安装目录：/root/shadowsocks
-* 请注意：4.0版本未经过严格的测试，若出现问题请及时提交 issue ，本人将会对相关内容进行排查，感谢理解
-* 由于零散更新，内容上出现部分代码冗余，会在未来进行部分代码重构
+* 请注意：5.0 bate 本版本可能存在严重性问题，如果有问题请提供错误方式。
 
-# 安装方法 （ 2017/12/21 更新）
+
+# 安装方法 （ 2018/02/05 更新）
 ```
-git clone https://github.com/wulabing/SSR-manyuser_glzjin_shell.git SSR
+git clone https://github.com/pandoraes/shadowsocksr-manyuser.git SSR
 
 cd SSR
-```
-旧版本安装：
-```
-chmod +x shadowsocks.sh
-
-./shadowsocks.sh | tee ss.log
 ```
 新版本安装：
 ```
@@ -32,13 +25,6 @@ chmod +x shadowsocks_new.sh
 supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Centos:/etc/supervisord.conf）`
 
 # 启动方式（）
-
-### 旧版本：
-
-* 启动：`/root/shadowsocks/log.sh`
-* 启动（日志模式）：`/root/shadowsocks/logrun.sh`
-* 停止：`/root/shadowsocks/stop.sh`
-* 日志：`/root/shadowsocks/tail.sh`
 
 ### 新版本：
 
@@ -55,6 +41,7 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 更新libsodium 到1.16稳定版 并且安装到/usr/local/libsodium
 * 重新修改manyuser 路径
 * 增加脚本所在目录
+* 增加基础服务安装 GCC
 * 修复bug
 
 ## 2017-12-21

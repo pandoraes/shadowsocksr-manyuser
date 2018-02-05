@@ -3,13 +3,11 @@
 #====================================================
 #	System Request:Debian 7+/Ubuntu 14.04+/Centos 6+
 #	Author:	wulabing
-#	Dscription: SSR glzjin server for manyuser (only)
-#	Version: 4.0
-#	Blog: https://www.wulabing.com
-#	Special thanks: Toyo
+#	Dscription: SSR server for manyuser (only)
+#	Version: 5.0
 #====================================================
 
-sh_ver="4.0"
+sh_ver="5.0"
 libsodium_folder="/etc/libsodium"
 shadowsocks_install_folder="/root"
 supervisor_dir="/etc/supervisor"
@@ -319,8 +317,8 @@ SSR_installation(){
 	development_tools_installation
 	libsodium_installation
 	
-	cd ${shadowsocks_install_folder} && git clone -b manyuser https://github.com/glzjin/shadowsocks.git 
-	cd shadowsocks && cp apiconfig.py userapiconfig.py && cp config.json user-config.json
+	cd ${shadowsocks_install_folder} && git clone -b manyuser https://github.com/pandoraes/shadowsocksr-manyuser.git 
+	cd shadowsocks/manyuser && cp apiconfig.py userapiconfig.py && cp config.json user-config.json
 	
 	SSR_dependency_installation
 

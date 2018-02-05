@@ -8,7 +8,7 @@
 #====================================================
 
 sh_ver="5.0"
-libsodium_folder="/etc/libsodium"
+libsodium_folder="/usr/local/libsodium"
 shadowsocks_install_folder="/root"
 supervisor_dir="/etc/supervisor"
 suerpvisor_conf_dir="${supervisor_dir}/conf.d"
@@ -101,23 +101,20 @@ development_tools_installation(){
 	
 }
 libsodium_installation(){
-	mkdir -p ${libsodium_folder} && cd ${libsodium_folder}
-	wget https://github.com/jedisct1/libsodium/releases/download/1.0.13/libsodium-1.0.13.tar.gz
-	if [[ ! -f ${libsodium_folder}/libsodium-1.0.13.tar.gz ]]; then
+	yum -y install gcc
+	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/libsodium-stable.tar.gz
+	if [[ ! -f libsodium-stable-2018-02-05.tar.gz ]]; then
 		echo -e "${Error} ${RedBG} libsodium download FAIL ${Font}"
 		exit 1
 	fi
-	tar xf libsodium-1.0.13.tar.gz && cd libsodium-1.0.13
-	./configure && make -j2 && make install
+	tar xf libsodium-stable.tar.gz && cd libsodium-stable
+	./configure --prefix=${libsodium_folder} && make -j2 && make install
 	if [[ $? -ne 0 ]]; then 
 		echo -e "${Error} ${RedBG} libsodium install FAIL ${Font}"
 		exit 1
 	fi
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	ldconfig
-
-	rm -rf ${libsodium_folder}
-
 }
 SSR_dependency_installation(){
 	if [[ ${ID} == "centos" ]]; then

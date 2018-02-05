@@ -1,4 +1,4 @@
-# sspanel+节点 v5 后端一键安装配置管理脚本
+# sspanel+节点 B1 后端一键安装配置管理脚本
 * 感谢glzjin wulabing提供的代码 
 * 适用于glzjin面板ssr后端的一键安装脚本 实现输入配置信息、以及全自动安装，配置一键修改，一键启动暂停等功能 支持 modwebapi 及 glzjinmod（mysql connect）
 * 新版(supervisor版本)支持 Ubuntu16.04+ / Centos 6+ / Debian 8+

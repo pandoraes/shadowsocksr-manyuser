@@ -2,19 +2,21 @@
 
 #====================================================
 #	System Request:Debian 7+/Ubuntu 14.04+/Centos 6+
-#	Author:	wulabing
+#	Author:	worms
 #	Dscription: SSR server for manyuser (only)
-#	Version: 5.0
+#	Version: B1
 #====================================================
 
-sh_ver="5.0"
+sh_ver="B1"
+libsodium-version="libsodium-stable"
 libsodium_folder="/usr/local/libsodium"
-shadowsocks_install_folder="/root"
+shadowsocks_install_folder="/usr/local"
 supervisor_dir="/etc/supervisor"
 suerpvisor_conf_dir="${supervisor_dir}/conf.d"
 shadowsocks_folder="${shadowsocks_install_folder}/shadowsocks"
 config="${shadowsocks_folder}/userapiconfig.py"
 debian_sourcelist="/etc/apt/source.list"
+
 
 #fonts color
 Green="\033[32m" 
@@ -102,15 +104,15 @@ development_tools_installation(){
 }
 libsodium_installation(){
 	yum -y install gcc
-	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/libsodium-stable.tar.gz
-	if [[ ! -f libsodium-stable-2018-02-05.tar.gz ]]; then
-		echo -e "${Error} ${RedBG} libsodium download FAIL ${Font}"
+	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium-version}.tar.gz
+	if [[ ! -f ${libsodium-version}.tar.gz ]]; then
+		echo -e "${Error} ${RedBG} ${libsodium-version} download FAIL ${Font}"
 		exit 1
 	fi
-	tar xf libsodium-stable.tar.gz && cd libsodium-stable
+	tar xf ${libsodium-version}.tar.gz && rm -rf ${libsodium-version}.tar.gz && cd ${libsodium-version}
 	./configure --prefix=${libsodium_folder} && make -j2 && make install
 	if [[ $? -ne 0 ]]; then 
-		echo -e "${Error} ${RedBG} libsodium install FAIL ${Font}"
+		echo -e "${Error} ${RedBG} ${libsodium-version} install FAIL ${Font}"
 		exit 1
 	fi
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf

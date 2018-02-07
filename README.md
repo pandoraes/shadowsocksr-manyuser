@@ -38,9 +38,11 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 
 # 更新
 ## 2018-02-06
+B1.02
 * 减少优化manyouser文件。
 
 ## 2018-02-05
+* 升级命名为B1分支
 * 更新libsodium 到1.16稳定版 并且安装到/usr/local/libsodium
 * 重新修改manyuser 路径
 * 增加脚本所在目录

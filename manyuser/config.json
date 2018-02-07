@@ -2,11 +2,11 @@
 	//本地SSR服务
     "server": "0.0.0.0",
     "server_ipv6": "::",
-    "server_port": 10743,
+    "server_port": 10723,
     "local_address": "127.0.0.1",
     "local_port": 1080,
 
-    "password": "wormpass",
+    "password": "pass123",
     "method": "aes-256-cfb",
     "protocol": "auth_sha1_v4",
     "protocol_param": "",
@@ -24,11 +24,11 @@
     "fast_open": false,
 	
 	//连接MYSQL
-	"host": "ss.waono.com",
+	"host": "xxx.com",
     "port": 3306,
-    "dbuser": "sspanel",
-    "dbpass": "sspanel_1234",
-    "db": "sspanelDB",
+    "dbuser": "xxxx",
+    "dbpass": "xxxx",
+    "db": "xxxxdb",
     "node_id": 3,
     "transfer_mul": 1.0,
     "ssl_enable": 0,

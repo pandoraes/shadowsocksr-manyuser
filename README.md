@@ -37,6 +37,9 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 日志 ：`tail -f /var/log/sslog.txt`
 
 # 更新
+## 2018-02-06
+* 减少优化manyouser文件。
+
 ## 2018-02-05
 * 更新libsodium 到1.16稳定版 并且安装到/usr/local/libsodium
 * 重新修改manyuser 路径

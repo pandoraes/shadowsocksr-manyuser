@@ -2,8 +2,8 @@
 * 感谢glzjin wulabing提供的代码 
 * 适用于glzjin面板ssr后端的一键安装脚本 实现输入配置信息、以及全自动安装，配置一键修改，一键启动暂停等功能 支持 modwebapi 及 glzjinmod（mysql connect）
 * 新版(supervisor版本)支持 Ubuntu16.04+ / Centos 6+ / Debian 8+
-* 默认安装目录：/root/shadowsocks
-* 请注意：5.0 bate 本版本可能存在严重性问题，如果有问题请提供错误方式。
+* 默认安装目录：/usr/local/shadowsocksr
+* 请注意：1.03 bate 本版本可能存在严重性问题，如果有问题请提供错误方式。
 
 
 # 安装方法 （ 2018/02/05 更新）
@@ -20,7 +20,8 @@ chmod +x shadowsocks_new.sh
 ```
 # 相关目录
 
-后端默认安装目录：`/root/shadowsocks`
+后端默认安装目录：`/usr/local/shadowsocksr`
+配置文件默认目录 `/etc/shadowsocksr/config.json`
 
 supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Centos:/etc/supervisord.conf）`
 
@@ -37,6 +38,12 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 日志 ：`tail -f /var/log/sslog.txt`
 
 # 更新
+## 2018-02-07
+B1.03
+* 修改合并配置文件为config.json
+* 优化代码提高性能
+* 修改DNS
+
 ## 2018-02-06
 B1.02
 * 减少优化manyouser文件。

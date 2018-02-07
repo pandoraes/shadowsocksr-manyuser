@@ -1,25 +1,38 @@
 {
+	//本地SSR服务
     "server": "0.0.0.0",
     "server_ipv6": "::",
-    "server_port": 8388,
+    "server_port": 10743,
     "local_address": "127.0.0.1",
     "local_port": 1080,
 
-    "password": "m",
-    "method": "aes-128-ctr",
-    "protocol": "auth_aes128_md5",
+    "password": "wormpass",
+    "method": "aes-256-cfb",
+    "protocol": "auth_sha1_v4",
     "protocol_param": "",
-    "obfs": "tls1.2_ticket_auth_compatible",
+    "obfs": "plain",
     "obfs_param": "",
     "speed_limit_per_con": 0,
     "speed_limit_per_user": 0,
 
-    "additional_ports" : {}, // only works under multi-user mode
-    "additional_ports_only" : false, // only works under multi-user mode
+    "additional_ports" : {},
     "timeout": 120,
     "udp_timeout": 60,
     "dns_ipv6": false,
     "connect_verbose_info": 0,
     "redirect": "",
-    "fast_open": false
+    "fast_open": false,
+	
+	//连接MYSQL
+	"host": "ss.waono.com",
+    "port": 3306,
+    "dbuser": "sspanel",
+    "dbpass": "sspanel_1234",
+    "db": "sspanelDB",
+    "node_id": 3,
+    "transfer_mul": 1.0,
+    "ssl_enable": 0,
+    "ssl_ca": "",
+    "ssl_cert": "",
+    "ssl_key": ""
 }

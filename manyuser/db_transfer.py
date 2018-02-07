@@ -285,8 +285,8 @@ class DbTransfer(TransferBase):
 		self.cfg = {
 			"host": "127.0.0.1",
 			"port": 3306,
-			"user": "ss",
-			"password": "pass",
+			"dbuser": "ss",
+			"dbpass": "pass",
 			"db": "shadowsocks",
 			"node_id": 0,
 			"transfer_mul": 1.0,
@@ -297,11 +297,7 @@ class DbTransfer(TransferBase):
 		self.load_cfg()
 
 	def load_cfg(self):
-		import json
-		config_path = get_config().MYSQL_CONFIG
-		cfg = None
-		with open(config_path, 'rb+') as f:
-			cfg = json.loads(f.read().decode('utf8'))
+		cfg = shell.get_config(False)
 
 		if cfg:
 			self.cfg.update(cfg)
@@ -343,12 +339,12 @@ class DbTransfer(TransferBase):
 					' WHERE port IN (%s)' % query_sub_in
 		if self.cfg["ssl_enable"] == 1:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8',
 					ssl={'ca':self.cfg["ssl_ca"],'cert':self.cfg["ssl_cert"],'key':self.cfg["ssl_key"]})
 		else:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8')
 
 		try:
@@ -374,12 +370,12 @@ class DbTransfer(TransferBase):
 		#数据库所有用户信息
 		if self.cfg["ssl_enable"] == 1:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8',
 					ssl={'ca':self.cfg["ssl_ca"],'cert':self.cfg["ssl_cert"],'key':self.cfg["ssl_key"]})
 		else:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8')
 
 		try:
@@ -442,12 +438,12 @@ class Dbv3Transfer(DbTransfer):
 
 		if self.cfg["ssl_enable"] == 1:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8',
 					ssl={'ca':self.cfg["ssl_ca"],'cert':self.cfg["ssl_cert"],'key':self.cfg["ssl_key"]})
 		else:
 			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
+					user=self.cfg["dbuser"], passwd=self.cfg["dbpass"],
 					db=self.cfg["db"], charset='utf8')
 		conn.autocommit(True)
 

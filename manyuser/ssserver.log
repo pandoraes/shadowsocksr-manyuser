@@ -10,3 +10,6 @@
 2018-02-06 17:24:19 ERROR    tcprelay.py:1097 unable to parse hostname www.wenda.tianya.cn when handling connection from ::ffff:122.4.247.104:51721
 2018-02-06 17:24:20 ERROR    tcprelay.py:1097 unable to parse hostname www.wangwang.1688.com when handling connection from ::ffff:122.4.247.104:51725
 2018-02-06 17:24:20 ERROR    tcprelay.py:1097 unable to parse hostname www.wanggou.com when handling connection from ::ffff:122.4.247.104:51717
+2018-02-06 18:04:23 ERROR    tcprelay.py:1097 unable to parse hostname www.wanggou.com when handling connection from ::ffff:122.4.247.104:57095
+2018-02-06 18:04:23 ERROR    tcprelay.py:1097 unable to parse hostname www.wangwang.1688.com when handling connection from ::ffff:122.4.247.104:57099
+2018-02-06 18:04:24 ERROR    tcprelay.py:1097 unable to parse hostname www.wenda.tianya.cn when handling connection from ::ffff:122.4.247.104:57111

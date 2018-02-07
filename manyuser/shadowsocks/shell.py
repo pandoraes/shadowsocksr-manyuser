@@ -73,16 +73,14 @@ def log_shadowsocks_version():
 
 
 def find_config():
-    user_config_path = 'user-config.json'
     config_path = 'config.json'
-
     def sub_find(file_name):
         if os.path.exists(file_name):
             return file_name
         file_name = os.path.join(os.path.abspath('..'), file_name)
         return file_name if os.path.exists(file_name) else None
 
-    return sub_find(user_config_path) or sub_find(config_path)
+    return sub_find(config_path)
 
 def check_config(config, is_local):
     if config.get('daemon', None) == 'stop':

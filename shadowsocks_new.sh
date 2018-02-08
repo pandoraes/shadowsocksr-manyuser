@@ -13,10 +13,9 @@ libsodium_folder="/usr/local/libsodium"
 shadowsocks_install_folder="/usr/local"
 supervisor_dir="/etc/supervisor"
 suerpvisor_conf_dir="${supervisor_dir}/conf.d"
-shadowsocks_folder="${shadowsocks_install_folder}/shadowsocks"
-config="${shadowsocks_folder}/userapiconfig.py"
+shadowsocks_folder="${shadowsocks_install_folder}/shadowsocksr"
+config="${shadowsocks_folder}/config.json"
 debian_sourcelist="/etc/apt/source.list"
-
 
 #fonts color
 Green="\033[32m" 
@@ -57,7 +56,7 @@ check_system(){
 }
 basic_installation(){
 	if [[ ${ID} == "centos" ]]; then
-		${INS} install tar wget epel-release -y
+		${INS} install tar wget gcc git epel-release -y
 	else
 		sed -i '/^deb cdrom/'d /etc/apt/sources.list
 		${INS} update
@@ -103,7 +102,6 @@ development_tools_installation(){
 	
 }
 libsodium_installation(){
-	yum -y install gcc
 	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium-version}.tar.gz
 	if [[ ! -f ${libsodium-version}.tar.gz ]]; then
 		echo -e "${Error} ${RedBG} ${libsodium-version} download FAIL ${Font}"
@@ -131,7 +129,7 @@ SSR_dependency_installation(){
 }
 supervisor_installation(){
 	if [[ ! -d ${shadowsocks_folder} ]]; then
-		read -p "请输入shadowsocks所在目录绝对路径（eg：/root/shadowsocks）" shadowsocks_folder
+		read -p "请输入shadowsocks所在目录绝对路径（eg：/usr/local/shadowsocksr）" shadowsocks_folder
 	fi
 	if [[ ${ID} == "centos" ]];then
 		yum -y install supervisor
@@ -317,7 +315,7 @@ SSR_installation(){
 	libsodium_installation
 	
 	cd ${shadowsocks_install_folder} && git clone -b manyuser https://github.com/pandoraes/shadowsocksr-manyuser.git 
-	cd shadowsocks/manyuser && cp apiconfig.py userapiconfig.py && cp config.json user-config.json
+	cd shadowsocks/manyuser && cp config.json /etc/shadowsocksr/config.json
 	
 	SSR_dependency_installation
 
@@ -326,15 +324,15 @@ SSR_installation(){
 	modify_ALL
 	iptables_OFF
 
-	echo -e "${OK} ${GreenBG} SSR manyuser for glzjin 安装完成 ${Font}"
+	echo -e "${OK} ${GreenBG} SSR manyuser 安装完成 ${Font}"
 	sleep 1
 }
 
 if_install(){
 	[[ -d ${shadowsocks_folder} && -f ${config} ]] && {
-		echo -e "${OK} ${GreenBG} ShadowsocksR glzjin 已安装 ${Font}"
+		echo -e "${OK} ${GreenBG} ShadowsocksR 已安装 ${Font}"
 	} || {
-		echo -e "${Error} ${RedBG} ShadowsocksR glzjin 未安装，请在安装后执行相关操作 ${Font}"
+		echo -e "${Error} ${RedBG} ShadowsocksR 未安装，请在安装后执行相关操作 ${Font}"
 		exit 1
 	}
 }
@@ -468,7 +466,7 @@ modify_management(){
 uninstall_management(){
 	if_install
 	rm -rf ${shadowsocks_folder}
-	echo -e "${OK$ {GreenBG} shadowsocks glzjin 卸载完成 ${Font}"
+	echo -e "${OK$ {GreenBG} shadowsocks 卸载完成 ${Font}"
 	exit 0
 }
 start_management(){

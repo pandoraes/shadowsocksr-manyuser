@@ -35,9 +35,14 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 强制停止 shadowsocks ：`./shadowsocks_new.sh fstop`
 * 配置信息变更：`./shadowsocks_new.sh modify`
 * 添加 supervisor 开机启动： `systemctl enable supervisor (centos6:chkconfig --add supervisord)`
-* 日志 ：`tail -f /var/log/sslog.txt`
+* 日志 ：`tail -f /var/log/ssr.log`
 
 # 更新
+## 2018-02-08
+* 增加启动脚本ssr
+* 修改日至文件为/var/log/ssr.log
+* 优化代码
+
 ## 2018-02-07
 B1.03
 * 修改合并配置文件为config.json

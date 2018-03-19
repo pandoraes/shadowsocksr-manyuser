@@ -35,6 +35,7 @@ Notification="${Yellow}[Notification]${Font}"
 source /etc/os-release &>/dev/null
 
 check_system(){
+	[[ $EUID != 0 ]] && echo -e "${Error} 当前账号非ROOT(或没有ROOT权限)" && exit 1
     if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]];then
         echo -e "${OK} ${GreenBG} 当前系统为 Centos ${VERSION_ID} ${Font} "
         INS="yum"
@@ -63,7 +64,28 @@ basic_installation(){
 		${INS} install tar wget -y
 	fi
 }
-
+# 设置 防火墙规则
+Add_iptables(){
+	iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport ${ssr_port} -j ACCEPT
+	iptables -I INPUT -m state --state NEW -m udp -p udp --dport ${ssr_port} -j ACCEPT
+	ip6tables -I INPUT -m state --state NEW -m tcp -p tcp --dport ${ssr_port} -j ACCEPT
+	ip6tables -I INPUT -m state --state NEW -m udp -p udp --dport ${ssr_port} -j ACCEPT
+}
+Del_iptables(){
+	iptables -D INPUT -m state --state NEW -m tcp -p tcp --dport ${port} -j ACCEPT
+	iptables -D INPUT -m state --state NEW -m udp -p udp --dport ${port} -j ACCEPT
+	ip6tables -D INPUT -m state --state NEW -m tcp -p tcp --dport ${port} -j ACCEPT
+	ip6tables -D INPUT -m state --state NEW -m udp -p udp --dport ${port} -j ACCEPT
+}
+Save_iptables(){
+	if [[ ${release} == "centos" ]]; then
+		service iptables save
+		service ip6tables save
+	else
+		iptables-save > /etc/iptables.up.rules
+		ip6tables-save > /etc/ip6tables.up.rules
+	fi
+}
 dependency_installation(){
 		${INS} -y install python-setuptools  && easy_install pip
 		if [[ $? -ne 0 ]]; then
@@ -77,10 +99,10 @@ dependency_installation(){
 				apt-get install python-pip -y
 			fi
 			if [[ $? -eq 0 ]]; then
-				echo -e "${OK} ${GreenBG} pip installation Successfully ${Font}"
+				echo -e "${OK} ${GreenBG} pip 安装完成 ${Font}"
 				sleep 1
 				else
-				echo -e "${Error} ${RedBG} pip installation FAIL ${Font}"
+				echo -e "${Error} ${RedBG} pip 安装失败 ${Font}"
 				exit 1
 			fi
 		fi
@@ -89,22 +111,23 @@ development_tools_installation(){
 	if [[ ${ID} == "centos" ]]; then
 		${INS} groupinstall "Development Tools" -y
 		if [[ $? -ne 0 ]]; then
-			echo -e "${Error} ${RedBG} Development Tools installation FAIL ${Font}"
+			echo -e "${Error} ${RedBG} Development Tools 安装失败 ${Font}"
 			exit 1
 		fi
 	else
 		${INS} install build-essential -y
 		if [[ $? -ne 0 ]]; then
-			echo -e "${Error} ${RedBG} build-essential installation FAIL ${Font}"
+			echo -e "${Error} ${RedBG} build-essential 安装失败 ${Font}"
 			exit 1
 		fi
 	fi
 	
 }
 libsodium_installation(){
+	echo -e "${Info} 正在下载 libsodium"
 	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium-version}.tar.gz
 	if [[ ! -f ${libsodium-version}.tar.gz ]]; then
-		echo -e "${Error} ${RedBG} ${libsodium-version} download FAIL ${Font}"
+		echo -e "${Error} ${RedBG} ${libsodium-version} 下载失败 ${Font}"
 		exit 1
 	fi
 	tar xf ${libsodium-version}.tar.gz && rm -rf ${libsodium-version}.tar.gz && cd ${libsodium-version}
@@ -132,7 +155,7 @@ supervisor_installation(){
 		read -p "请输入shadowsocks所在目录绝对路径（eg：/usr/local/shadowsocksr）" shadowsocks_folder
 	fi
 	if [[ ${ID} == "centos" ]];then
-		yum -y install supervisor
+		${INS} -y install supervisor
 	else
 		apt-get install supervisor -y
 	fi
@@ -188,145 +211,30 @@ EOF
 	echo -e "${OK} ${GreenBG} supervisor 配置导入成功 ${Font}"
 	sleep 1
 }
-modify_API(){
-	sed -i '/API_INTERFACE/c \API_INTERFACE = '\'${API}\''' ${config}
-}
-modify_NODE_ID(){
-	sed -i '/NODE_ID/c \NODE_ID = '${NODE_ID}'' ${config}
-}
-modify_SPEEDTEST(){
-	sed -i '/SPEED/c \SPEEDTEST = '${SPEEDTEST}'' ${config}
-}
-modify_CLOUDSAFE(){
-	sed -i '/CLOUD/c \CLOUDSAFE = '${CLOUDSAFE}'' ${config}
-}
-modify_ANTISSATTACK(){
-	sed -i '/ANTISS/c \ANTISSATTACK = '${ANTISSATTACK}'' ${config}
-}
-modify_MU_SUFFIX(){
-	sed -i '/MU_SUFFIX/c \MU_SUFFIX = '\'${MU_SUFFIX}\''' ${config}
-}
-modify_MU_REGEX(){
-	sed -i '/MU_REGEX/c \MU_REGEX = '\'${MU_REGEX}\''' ${config}
-}
-modify_WEBAPI_URL(){
-	sed -i '/WEBAPI_URL/c \WEBAPI_URL = '\'${WEBAPI_URL}\''' ${config}
-}
-modify_WEBAPI_TOKEN(){
-	sed -i '/WEBAPI_TOKEN/c \WEBAPI_TOKEN = '\'${WEBAPI_TOKEN}\''' ${config}
-}
-modify_MYSQL_HOST(){
-	sed -i '/MYSQL_HOST/c \MYSQL_HOST = '\'${MYSQL_HOST}\''' ${config}
-}
-modify_MYSQL_PORT(){
-	sed -i '/MYSQL_PORT/c \MYSQL_PORT = '${MYSQL_PORT}'' ${config}
-}
-modify_MYSQL_USER(){
-	sed -i '/MYSQL_USER/c \MYSQL_USER = '\'${MYSQL_USER}\''' ${config}
-}
-modify_MYSQL_PASS(){
-	sed -i '/MYSQL_PASS/c \MYSQL_PASS = '\'${MYSQL_PASS}\''' ${config}
-}
-modify_MYSQL_DB(){
-	sed -i '/MYSQL_DB/c \MYSQL_DB = '\'${MYSQL_DB}\''' ${config}
-}
-modify_MYSQL(){
-	modify_MYSQL_HOST
-	modify_MYSQL_PASS
-	modify_MYSQL_PORT
-	modify_MYSQL_USER
-	modify_MYSQL_DB
-}
-selectApi(){
-	echo -e "${Yellow} 请选择 API 模式: ${Font}"
-	echo -e "1.modwebapi"
-	echo -e "2.glzjinmod(mysql_connect)"
-	stty erase '^H' && read -p "(default:modwebapi):" API
-	if [[ -z ${API} || ${API} == "1" ]]; then
-		API="modwebapi"
-	elif [[ ${API} == "2" ]]; then
-		API="glzjinmod"
-	else
-		echo -e "${Error} you can only select in 1 or 2"
-		exit 1
-	fi
-}
-common_set(){
-	stty erase '^H' && read -p "NODE_ID(num_only):" NODE_ID
-	stty erase '^H' && read -p "SPEEDTEST_CIRCLE(num_only,default:0):" SPEEDTEST
-	[[ -z ${SPEEDTEST} ]] && SPEEDTEST="0"
-	stty erase '^H' && read -p "CLOUDSAFE_ON(0 or 1,default:0,advise:0!):" CLOUDSAFE
-	[[ -z ${CLOUDSAFE} ]] && CLOUDSAFE="0"
-	stty erase '^H' && read -p "ANTISSATTACK(0 or 1,default:0):" ANTISSATTACK
-	[[ -z ${ANTISSATTACK} ]] && ANTISSATTACK="0"
-	stty erase '^H' && read -p "MU_SUFFIX(default:zhaoj.in):" MU_SUFFIX
-	[[ -z ${MU_SUFFIX} ]] && MU_SUFFIX="zhaoj.in"
-	stty erase '^H' && read -p "MU_REGEX(default:%5m%id.%suffix):" MU_REGEX
-	[[ -z ${MU_REGEX} ]] && MU_REGEX="%5m%id.%suffix"	
-}
-modwebapi_set(){
-	stty erase '^H' && read -p "WEBAPI_URL(example: https://www.zhaoj.in):" WEBAPI_URL
-	stty erase '^H' && read -p "WEBAPI_TOKEN(example: zhaoj.in):" WEBAPI_TOKEN
-}
-mysql_set(){
-	stty erase '^H' && read -p "MYSQL_HOST(IP addr or domain):" MYSQL_HOST
-	stty erase '^H' && read -p "MYSQL_PORT(default:3306):" MYSQL_PORT
-	[[ -z ${MYSQL_PORT} ]] && MYSQL_PORT="3306"
-	stty erase '^H' && read -p "MYSQL_USER(default:root):" MYSQL_USER
-	[[ -z ${MYSQL_USER} ]] && MYSQL_USER="root"
-	stty erase '^H' && read -p "MYSQL_PASS:" MYSQL_PASS
-	stty erase '^H' && read -p "MYSQL_DB(default:sspanel):" MYSQL_DB
-	[[ -z ${MYSQL_DB} ]] && MYSQL_DB="sspanel"
-}
-modify_ALL(){
-	modify_CLOUDSAFE
-	modify_API
-	modify_MU_REGEX
-	modify_MU_SUFFIX
-	modify_MYSQL
-	modify_NODE_ID
-	modify_SPEEDTEST
-	modify_WEBAPI_TOKEN
-	modify_WEBAPI_URL
-}
+
 iptables_OFF(){
 	systemctl disable firewalld &>/dev/null
 	systemctl disable iptables &>/dev/null
 	chkconfig iptables off &>/dev/null
 	iptables -F	&>/dev/null
 }
-SSR_installation(){
-#select api
 
-	selectApi
-	echo ${API}
-	common_set
-
-	if [[ ${API} == "modwebapi" ]]; then
-		modwebapi_set
+check_install_ssr(){
+	if [[ -e ${shadowsocks_folder} ]];then
+		echo -e "${Info} ShadowsocksR 文件夹已存在，请检查 ${shadowsocks_folder} 并且验证完整性"
 	else
-		mysql_set
+		cd ${shadowsocks_install_folder} && git clone -b master https://github.com/pandoraes/shadowsocksr-manyuser.git
 	fi
-	
-#basic install	
-	basic_installation
-	dependency_installation
-	development_tools_installation
-	libsodium_installation
-	
-	cd ${shadowsocks_install_folder} && git clone -b manyuser https://github.com/pandoraes/shadowsocksr-manyuser.git 
-	cd shadowsocks/manyuser && cp config.json /etc/shadowsocksr/config.json
-	
-	SSR_dependency_installation
-
-
-#final option
-	modify_ALL
-	iptables_OFF
-
-	echo -e "${OK} ${GreenBG} SSR manyuser 安装完成 ${Font}"
-	sleep 1
 }
+
+check_install_config(){
+	if [[ -e ${config} ]];then
+		echo -e "${Info} ShadowsocksR 配置文件已存在，请检查 ${config} 并且验证完整性"
+	else
+		cd ${shadowsocks_folder} && cp config.json /etc/shadowsocksr/config.json
+	fi
+}
+
 
 if_install(){
 	[[ -d ${shadowsocks_folder} && -f ${config} ]] && {
@@ -337,40 +245,23 @@ if_install(){
 	}
 }
 
-option(){
-	echo -e "${Red} 请选择安装内容 ${Font}"
-	echo -e "1. SSR + supervisor"
-	echo -e "2. SSR "
-	echo -e "3. supervisor"
-	read -p "input:" number
-	case ${number} in
-		1)
-			SSR_installation
-			supervisor_installation
-			supervisor_conf_modify_${ID}
-			;;
-		2)
-			SSR_installation
-			;;
-		3)
-			supervisor_installation
-			supervisor_conf_modify_${ID}
-			;;
-		*)
-			echo -e "${Error} ${RedBG} 请输入正确的序号 ${Font}"
-			exit 1
-			;;
-	esac
+SSR_installation(){
+#set config
+
+#basic install	
+	basic_installation
+	dependency_installation
+	development_tools_installation
+	libsodium_installation
+	check_install_ssr
+	check_install_config
+	SSR_dependency_installation
+#final option
+	iptables_OFF
+	echo -e "${OK} ${GreenBG} SSR manyuser 安装完成 ${Font}"
+	sleep 1
 }
-modify_module(){
-	read -p "请输入 $1 修改内容: " $1
-	modify_$1
-	[[ $? -eq 0 ]] && {
-		echo -e "${OK} ${GreenBG} $1 修改成功 请重新启动后端 ${Font}"
-	} || {
-		echo -e "${Error} ${RedBG} $1 修改失败 ${Font}"
-	}	
-}
+
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
@@ -397,182 +288,21 @@ install_management(){
 				;;
 		esac
 }
-modify_management(){
-	if_install
-	echo -e "${Red}请选择要修改的内容 ${Font}"
-	echo -e "${GreenBG}   公共内容   ${Font}"
-	echo -e "1. NODE_ID（节点编号）"
-	echo -e "2. SPEEDTEST（测速周期）"
-	echo -e "3. CLOUDSAFE（云安全，非常不建议开启）"
-	echo -e "4. ANTISSATTACK（ss攻击抵抗，自动封禁连接方式或密码错误的IP）"
-	echo -e "5. MU_SUFFIX"
-	echo -e "6. MU_REGEX"
-	echo -e	"${GreenBG}   webapi模式相关内容   ${Font}"
-	echo -e "7. WEBAPI_URL"	
-	echo -e "8. WEBAPI_TOKEN" 
-	echo -e "${GreenBG}   glzjinmod模式相关内容   ${Font}"
-	echo -e "9. MYSQL_HOST（数据库主机）"
-	echo -e "10.MYSQL_PORT（数据库端口）"
-	echo -e "11.MYSQL_USER（数据库用户名）"
-	echo -e "12.MYSQL_PASSWORD（数据库密码）"
-	echo -e "13.MYSQL_DB（数据库名称）"
-	read -p "input:" modify
-	case ${modify} in 
-		1)
-			modify_module "NODE_ID"
-			;;
-		2)
-			modify_module "SPEED_TEST"
-			;;
-		3)
-			modify_module "CLOUDSAFE"
-			;;
-		4)
-			modify_module "ANTISSATTACK"
-			;;
-		5)
-			modify_module "MU_SUFFIX"
-			;;
-		6)
-			modify_module "MU_REGEX"
-			;;
-		7)
-			modify_module "WEBAPI_URL"
-			;;
-		8)
-			modify_module "WEBAPI_TOKEN"
-			;;
-		9)
-			modify_module "MYSQL_HOST"
-			;;
-		10)
-			modify_module "MYSQL_PORT"
-			;;
-		11)
-			modify_module "MYSQL_USER"
-			;;
-		12)
-			modify_module "MYSQL_PASS"
-			;;
-		13)
-			modify_module "MYSQL_DB"
-			;;
-		*)
-			echo -e "${RedBG} 请输入正确的序号 ${Font}"
-			exit 1
-			;;
-	esac
-}
+
 uninstall_management(){
 	if_install
 	rm -rf ${shadowsocks_folder}
 	echo -e "${OK$ {GreenBG} shadowsocks 卸载完成 ${Font}"
 	exit 0
 }
-start_management(){
-	command -v supervisord >/dev/null
-	if [[ $? -ne 0  ]];then
-		echo -e "${Notification} 检测到未安装 supervisord"
-		/root/shadowsocks/logrun.sh
-		sleep 2
-		echo -e "${OK} ${GreenBG} 后端已启动 ${Font}"
-	else
-		echo -e "${OK} 检测到已安装 supervisord"
-		command -v systemctl >/dev/null
-		if [[  $? -ne 0 ]];then
-			service supervisord start
-			sleep 2
-			[[ `ps -ef | grep supervisor |grep -v grep | wc -l` -ge 1 ]] && {
-				echo -e "${OK} ${GreenBG} 后端（supervisord）已启动 ${Font}"
-			} || {
-				echo -e "${Error} ${RedBG} 后端启动失败 ${Font}"
-				exit 1
-			}
-		else
-			systemctl start supervisor
-			sleep 2
-			[[ `ps -ef | grep supervisor |grep -v grep | wc -l` -ge 1 ]] && {
-				echo -e "${OK} ${GreenBG} 后端（supervisord）已启动 ${Font}"
-			} || {
-				echo -e "${Error} ${RedBG} 后端启动失败 ${Font}"
-				exit 1
-			}
-		fi
-	fi
 
-}
-stop_management(){
-	command -v supervisord >/dev/null
-	if [[ $? -ne 0 ]];then
-		echo -e "${Notification} 检测到未安装 supervisord"
-		/root/shadowsocks/stop.sh
-		sleep 2
-		echo -e "${OK} ${GreenBG} 后端已关闭 ${Font}"
-	else
-		echo -e "${OK} 检测到已安装 supervisord"
-		command -v systemctl >/dev/null
-		if [[ $? -ne 0 ]];then
-			service supervisord stop
-			sleep 2
-			[[ `ps -ef | grep supervisor |grep -v grep | wc -l` -eq 0 ]] && {
-				echo -e "${OK} ${GreenBG} 后端（supervisord）已关闭 ${Font}"
-			} || {
-				echo -e "${Error} ${RedBG} 后端关闭失败 ${Font}"
-				exit 1
-			}
-		else
-			systemctl stop supervisor
-			sleep 2
-			[[ `ps -ef | grep supervisor |grep -v grep | wc -l` -eq 0 ]] && {
-				echo -e "${OK} ${GreenBG} 后端（supervisord）已关闭 ${Font}"
-			} || {
-				echo -e "${Error} ${RedBG} 后端关闭失败 ${Font}"
-				exit 1
-			}
-		fi
-	fi
-}
-force_stop(){
-	supervisor_pid=` ps -ef | grep supervisor |grep -v grep|awk '{print $2}'`
-	ss_pid=` ps -ef | grep server.py |grep -v grep|awk '{print $2}' `
-	kill -9 ${supervisor_pid} ${ss_pid}
-	echo -e "${OK} ${GreenBG} 后端（supervisord）已关闭 ${Font}"
-}
 management(){
 	case $1 in
 		install)
 			install_management
 			;;
-		modify)
-			modify_management
-			;;
 		uninstall)
-			uninstall_management
-			;;
-		start)
-			start_management
-			;;
-		stop)
-			stop_management
-			;;
-		restart)
-			stop_management
-			start_management
-			;;
-		fstop)
-			force_stop
-			;;
-		status)
-			if [[ `ps -ef | grep server.py |grep -v grep | wc -l` -ge 1 ]];then
-				echo -e "${OK} ${GreenBG} 后端已启动 ${Font}"
-			else
-				echo -e "${OK} ${RedBG} 后端未启动 ${Font}"
-				exit 1
-			fi
-			;;
-		*)
-			echo -e "${Notification} Usage:{start|stop|fstop|status|install|uninstall|modify}"
-			exit 1
+			uninstall_management			
 			;;
 	esac
 }

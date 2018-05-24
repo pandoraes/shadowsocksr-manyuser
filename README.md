@@ -35,6 +35,9 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 
 
 # 更新
+## 2018-05-24
+* 调整位置
+
 ## 2018-02-08
 * 增加启动脚本ssr
 * 修改日至文件为/var/log/ssr.log

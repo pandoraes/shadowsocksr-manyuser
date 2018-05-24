@@ -8,7 +8,7 @@
 #====================================================
 
 sh_ver="B1"
-libsodium-version="libsodium-stable"
+libsodium_version="libsodium-stable"
 libsodium_folder="/usr/local/libsodium"
 shadowsocks_install_folder="/usr/local"
 supervisor_dir="/etc/supervisor"
@@ -57,11 +57,19 @@ check_system(){
 }
 basic_installation(){
 	if [[ ${ID} == "centos" ]]; then
-		${INS} install tar wget gcc git epel-release -y
+		${INS} install -y tar wget gcc git unzip
 	else
 		sed -i '/^deb cdrom/'d /etc/apt/sources.list
 		${INS} update
-		${INS} install tar wget -y
+		${INS} install -y tar wget gcc git unzip
+	fi
+	Check_python
+}
+Check_python(){
+	python_ver=`python -h`
+	if [[ -z ${python_ver} ]]; then
+		echo -e "${Info} 没有安装Python，开始安装..."
+		${INS} install -y python
 	fi
 }
 # 设置 防火墙规则
@@ -86,27 +94,6 @@ Save_iptables(){
 		ip6tables-save > /etc/ip6tables.up.rules
 	fi
 }
-dependency_installation(){
-		${INS} -y install python-setuptools  && easy_install pip
-		if [[ $? -ne 0 ]]; then
-			if [[ ${ID} == "centos" ]];then
-				echo -e "${OK} ${GreenBG} 尝试 yum 安装 python-pip ${Font}"
-				sleep 2
-				yum -y install python-pip 
-			else
-				echo -e "${OK} ${GreenBG} 尝试 apt 安装 python-pip ${Font}"
-				sleep 2
-				apt-get install python-pip -y
-			fi
-			if [[ $? -eq 0 ]]; then
-				echo -e "${OK} ${GreenBG} pip 安装完成 ${Font}"
-				sleep 1
-				else
-				echo -e "${Error} ${RedBG} pip 安装失败 ${Font}"
-				exit 1
-			fi
-		fi
-}
 development_tools_installation(){
 	if [[ ${ID} == "centos" ]]; then
 		${INS} groupinstall "Development Tools" -y
@@ -125,31 +112,21 @@ development_tools_installation(){
 }
 libsodium_installation(){
 	echo -e "${Info} 正在下载 libsodium"
-	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium-version}.tar.gz
-	if [[ ! -f ${libsodium-version}.tar.gz ]]; then
-		echo -e "${Error} ${RedBG} ${libsodium-version} 下载失败 ${Font}"
+	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium_version}.tar.gz
+	if [[ ! -f ${libsodium_version}.tar.gz ]]; then
+		echo -e "${Error} ${RedBG} ${libsodium_version} 下载失败 ${Font}"
 		exit 1
 	fi
-	tar xf ${libsodium-version}.tar.gz && rm -rf ${libsodium-version}.tar.gz && cd ${libsodium-version}
+	tar xf ${libsodium_version}.tar.gz && rm -rf ${libsodium_version}.tar.gz && cd ${libsodium_version}
 	./configure --prefix=${libsodium_folder} && make -j2 && make install
 	if [[ $? -ne 0 ]]; then 
-		echo -e "${Error} ${RedBG} ${libsodium-version} install FAIL ${Font}"
+		echo -e "${Error} ${RedBG} ${libsodium_version} install FAIL ${Font}"
 		exit 1
 	fi
 	echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 	ldconfig
 }
-SSR_dependency_installation(){
-	if [[ ${ID} == "centos" ]]; then
-		cd ${shadowsocks_folder}
-		${INS} install python-devel libffi-devel openssl-devel -y
-		pip install -r requirements.txt
-		pip install requests		
-	else
-		pip install cymysql
-		pip install requests
-	fi
-}
+
 supervisor_installation(){
 	if [[ ! -d ${shadowsocks_folder} ]]; then
 		read -p "请输入shadowsocks所在目录绝对路径（eg：/usr/local/shadowsocksr）" shadowsocks_folder
@@ -212,18 +189,16 @@ EOF
 	sleep 1
 }
 
-iptables_OFF(){
-	systemctl disable firewalld &>/dev/null
-	systemctl disable iptables &>/dev/null
-	chkconfig iptables off &>/dev/null
-	iptables -F	&>/dev/null
-}
 
 check_install_ssr(){
 	if [[ -e ${shadowsocks_folder} ]];then
 		echo -e "${Info} ShadowsocksR 文件夹已存在，请检查 ${shadowsocks_folder} 并且验证完整性"
 	else
-		cd ${shadowsocks_install_folder} && git clone -b master https://github.com/pandoraes/shadowsocksr-manyuser.git
+		cd ${shadowsocks_install_folder}
+		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/manyuser.zip; then
+			echo -e "${Error} ShadowsocksR 后端文件下载失败 !" && exit 1
+		fi
+		unzip manyuser.zip && mv manyuser shadowsocksr
 	fi
 }
 
@@ -231,7 +206,10 @@ check_install_config(){
 	if [[ -e ${config} ]];then
 		echo -e "${Info} ShadowsocksR 配置文件已存在，请检查 ${config} 并且验证完整性"
 	else
-		cd ${shadowsocks_folder} && cp config.json /etc/shadowsocksr/config.json
+		cd ${shadowsocks_folder}
+		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/manyuser/config.json; then
+			echo -e "${Error} ShadowsocksR 配置文件下载失败 !" && exit 1
+		fi
 	fi
 }
 
@@ -244,20 +222,58 @@ if_install(){
 		exit 1
 	}
 }
-
+Install_ServerSpeeder(){
+	[[ -e ${Server_Speeder_file} ]] && echo -e "${Error} 锐速(Server Speeder) 已安装 !" && exit 1
+	cd /root
+	#借用91yun.rog的开心版锐速
+	wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder.sh
+	[[ ! -e "serverspeeder.sh" ]] && echo -e "${Error} 锐速安装脚本下载失败 !" && exit 1
+	bash serverspeeder.sh
+	sleep 2s
+	PID=`ps -ef |grep -v grep |grep "serverspeeder" |awk '{print $2}'`
+	if [[ ! -z ${PID} ]]; then
+		rm -rf /root/serverspeeder.sh
+		rm -rf /root/91yunserverspeeder
+		rm -rf /root/91yunserverspeeder.tar.gz
+		echo -e "${Info} 锐速(Server Speeder) 安装完成 !" && exit 1
+	else
+		echo -e "${Error} 锐速(Server Speeder) 安装失败 !" && exit 1
+	fi
+}
+Install_LotServer(){
+	[[ -e ${LotServer_file} ]] && echo -e "${Error} LotServer 已安装 !" && exit 1
+	wget --no-check-certificate -qO /tmp/appex.sh "https://raw.githubusercontent.com/0oVicero0/serverSpeeder_Install/master/appex.sh"
+	[[ ! -e "/tmp/appex.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
+	bash /tmp/appex.sh 'install'
+	sleep 2s
+	PID=`ps -ef |grep -v grep |grep "appex" |awk '{print $2}'`
+	if [[ ! -z ${PID} ]]; then
+		echo -e "${Info} LotServer 安装完成 !" && exit 1
+	else
+		echo -e "${Error} LotServer 安装失败 !" && exit 1
+	fi
+}
+Install_BBR(){
+	if [[ ! -e ${BBR_file} ]]; then
+		echo -e "${Error} 没有发现 BBR脚本，开始下载..."
+		cd "${shadowsocks_install_folder}"
+		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/bbr.sh; then
+			echo -e "${Error} BBR 脚本下载失败 !" && exit 1
+		else
+			echo -e "${Info} BBR 脚本下载完成 !"
+			chmod +x bbr.sh
+		fi
+	fi
+	bash "${BBR_file}"
+}
 SSR_installation(){
-#set config
-
 #basic install	
 	basic_installation
-	dependency_installation
 	development_tools_installation
 	libsodium_installation
 	check_install_ssr
 	check_install_config
-	SSR_dependency_installation
 #final option
-	iptables_OFF
 	echo -e "${OK} ${GreenBG} SSR manyuser 安装完成 ${Font}"
 	sleep 1
 }

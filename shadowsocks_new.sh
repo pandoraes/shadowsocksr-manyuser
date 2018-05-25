@@ -112,7 +112,7 @@ development_tools_installation(){
 }
 libsodium_installation(){
 	echo -e "${Info} 正在下载 libsodium"
-	wget https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/libsodium/${libsodium_version}.tar.gz
+	wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/libsodium/${libsodium_version}.tar.gz
 	if [[ ! -f ${libsodium_version}.tar.gz ]]; then
 		echo -e "${Error} ${RedBG} ${libsodium_version} 下载失败 ${Font}"
 		exit 1
@@ -195,7 +195,7 @@ check_install_ssr(){
 		echo -e "${Info} ShadowsocksR 文件夹已存在，请检查 ${shadowsocks_folder} 并且验证完整性"
 	else
 		cd ${shadowsocks_install_folder}
-		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/manyuser.zip; then
+		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/manyuser.zip; then
 			echo -e "${Error} ShadowsocksR 后端文件下载失败 !" && exit 1
 		fi
 		unzip manyuser.zip && mv manyuser shadowsocksr

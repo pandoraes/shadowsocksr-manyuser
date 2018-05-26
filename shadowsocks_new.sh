@@ -198,7 +198,7 @@ check_install_ssr(){
 		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/manyuser.zip; then
 			echo -e "${Error} ShadowsocksR 后端文件下载失败 !" && exit 1
 		fi
-		unzip manyuser.zip && mv manyuser shadowsocksr
+		unzip manyuser.zip && mv manyuser shadowsocksr && rm -f manyuser.zip
 	fi
 }
 

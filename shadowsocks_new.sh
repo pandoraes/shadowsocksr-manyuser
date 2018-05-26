@@ -199,6 +199,10 @@ check_install_ssr(){
 			echo -e "${Error} ShadowsocksR 后端文件下载失败 !" && exit 1
 		fi
 		unzip manyuser.zip && mv manyuser shadowsocksr && rm -f manyuser.zip
+		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/ssr; then
+			echo -e "${Error} ShadowsocksR 服务文件下载失败 !" && exit 1
+		fi
+		mv ssr /etc/init.d/ssr && chmod +x /etc/init.d/ssr && chkconfig --add ssr
 	fi
 }
 

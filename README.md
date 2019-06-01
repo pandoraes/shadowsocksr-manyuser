@@ -20,7 +20,7 @@ chmod +x shadowsocks_new.sh
 ```
 
 # 安装BBR
-
+```
   uname -r
   查看内核版本，含有 4.9.0 就表示 OK 了
   ————————————
@@ -38,6 +38,7 @@ chmod +x shadowsocks_new.sh
   ————————————
   lsmod | grep bbr
   返回值有 tcp_bbr 模块即说明bbr已启动。
+```
 
 # 相关目录
 

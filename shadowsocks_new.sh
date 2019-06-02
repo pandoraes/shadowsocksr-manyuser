@@ -299,7 +299,7 @@ install_management(){
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;
-			3)
+			2)
 				SSR_installation
 				Install_BBR
 				;;	

@@ -59,7 +59,7 @@ check_system(){
     fi
 }
 basic_installation(){
-	if [[ ${ID} == "centos" || ${ID} == "amzn"]]; then
+	if [[ ${ID} == "centos" || ${ID} == "amzn" ]]; then
 		${INS} install -y tar wget gcc git unzip
 	else
 		sed -i '/^deb cdrom/'d /etc/apt/sources.list
@@ -98,7 +98,7 @@ Save_iptables(){
 	fi
 }
 development_tools_installation(){
-	if [[ ${ID} == "centos" ]]; then
+	if [[ ${ID} == "centos" || ${ID} == "amzn" ]]; then
 		${INS} groupinstall "Development Tools" -y
 		if [[ $? -ne 0 ]]; then
 			echo -e "${Error} ${RedBG} Development Tools 安装失败 ${Font}"

@@ -50,6 +50,9 @@ check_system(){
         INS="yum"
 		ID="centos"
 		VERSION_ID="6"
+	elif [[ "${ID}" == "amzn" && ${VERSION_ID} -ge 2  ]]; then
+		echo -e "${OK} ${GreenBG} 当前系统为 amazon ${VERSION_ID} ${Font} "
+		INS="yum"
     else
         echo -e "${Error} ${RedBG} 当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内，安装中断 ${Font} "
         exit 1
@@ -286,8 +289,9 @@ install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
 		echo -e "1. SSR + supervisor"
-		echo -e "2. SSR "
-		echo -e "3. supervisor"
+		echo -e "2. SSR + BBR"
+		echo -e "3. SSR "
+		echo -e "4. supervisor"
 		read -p "input:" number
 		case ${number} in
 			1)
@@ -295,10 +299,14 @@ install_management(){
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;
-			2)
+			3)
+				SSR_installation
+				Install_BBR
+				;;	
+			3)
 				SSR_installation
 				;;
-			3)
+			4)
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;

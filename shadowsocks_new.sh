@@ -134,7 +134,7 @@ supervisor_installation(){
 	if [[ ! -d ${shadowsocks_folder} ]]; then
 		read -p "请输入shadowsocks所在目录绝对路径（eg：/usr/local/shadowsocksr）" shadowsocks_folder
 	fi
-	if [[ ${ID} == "centos" ]];then
+	if [[ ${ID} == "centos" || ${ID} == "amzn" ]];then
 		${INS} -y install supervisor
 	else
 		apt-get install supervisor -y

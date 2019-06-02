@@ -59,7 +59,7 @@ check_system(){
     fi
 }
 basic_installation(){
-	if [[ ${ID} == "centos" ]]; then
+	if [[ ${ID} == "centos" || ${ID} == "amzn"]]; then
 		${INS} install -y tar wget gcc git unzip
 	else
 		sed -i '/^deb cdrom/'d /etc/apt/sources.list

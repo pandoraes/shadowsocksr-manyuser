@@ -290,21 +290,21 @@ SSR_installation(){
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
-		echo -e "1. SSR + supervisor"
-		echo -e "2. SSR + BBR"
+		echo -e "1. SSR + BBR"
+		echo -e "2. SSR + supervisor"
 		echo -e "3. SSR "
 		echo -e "4. supervisor"
 		read -p "input:" number
 		case ${number} in
 			1)
 				SSR_installation
-				supervisor_installation
-				supervisor_conf_modify_${ID}
+				Install_BBR
 				;;
 			2)
 				SSR_installation
-				Install_BBR
-				;;	
+				supervisor_installation
+				supervisor_conf_modify_${ID}
+				;;				
 			3)
 				SSR_installation
 				;;

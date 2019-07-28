@@ -16,6 +16,8 @@ suerpvisor_conf_dir="${supervisor_dir}/conf.d"
 shadowsocks_folder="${shadowsocks_install_folder}/shadowsocksr"
 config="${shadowsocks_folder}/config.json"
 debian_sourcelist="/etc/apt/source.list"
+dir_pwd=$(pwd)
+BBR_file="${dir_pwd}/download/bash/bbr.sh"
 
 #fonts color
 Green="\033[32m" 

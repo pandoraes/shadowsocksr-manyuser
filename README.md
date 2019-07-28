@@ -14,9 +14,7 @@ cd SSR
 ```
 新版本安装：
 ```
-chmod +x shadowsocks_new.sh
-
-./shadowsocks_new.sh install | tee ss.log
+chmod +x shadowsocks_new.sh&&./shadowsocks_new.sh install | tee ss.log
 ```
 
 # 检测BBR

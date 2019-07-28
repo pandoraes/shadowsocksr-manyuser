@@ -24,11 +24,11 @@
     "fast_open": false,
 	
 	//连接MYSQL
-	"host": "db.baidu.com",
-    "port": 3306,
-    "dbuser": "root",
-    "dbpass": "123456",
-    "db": "baiduDB",
+    "host": "db.baidu.com", //数据库连接地址
+    "port": 3306,           //数据库端口
+	"db": "baiduDB",        //数据库名称
+    "dbuser": "root",       //数据库帐号
+    "dbpass": "123456",     //数据库密码
     "node_id": 3,
     "transfer_mul": 1.0,
     "ssl_enable": 0,

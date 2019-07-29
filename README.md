@@ -37,9 +37,12 @@ yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&sh ssr.sh install
   ————————————
   sysctl net.core.default_qdisc 
   ————————————
-  lsmod | grep bbr   返回值有 tcp_bbr 模块即说明bbr已启动。
+  lsmod|grep bbr   返回值有tcp_bbr模块即说明bbr已启动。
 ```
 # 更新
+## 2019-07-29
+* 细微调整
+
 ## 2018-05-24
 * 调整位置
 

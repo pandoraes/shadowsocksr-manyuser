@@ -12,27 +12,6 @@
 yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&sh ssr.sh install
 ```
 
-# 检测BBR
-```
-  uname -r
-  查看内核版本，含有 4.9.0 就表示 OK 了
-  ————————————
-  sysctl net.ipv4.tcp_available_congestion_control
-  返回值一般为：
-  net.ipv4.tcp_available_congestion_control = bbr cubic reno
-  ————————————
-  sysctl net.ipv4.tcp_congestion_control
-  返回值一般为：
-  net.ipv4.tcp_congestion_control = bbr
-  ————————————
-  sysctl net.core.default_qdisc
-  返回值一般为：
-  net.core.default_qdisc = fq
-  ————————————
-  lsmod | grep bbr
-  返回值有 tcp_bbr 模块即说明bbr已启动。
-```
-
 # 相关目录
 
 后端默认安装目录：`/usr/local/shadowsocksr`
@@ -49,7 +28,22 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 停止  service ssr stop
 * 重启  service ssr restart
 
-
+# 手动检测BBR是否开启
+```
+  uname -r
+  查看内核版本，含有 4.9.0 就表示 OK 了
+  ————————————
+  sysctl net.ipv4.tcp_available_congestion_control
+  返回值一般为：net.ipv4.tcp_available_congestion_control = bbr cubic reno
+  ————————————
+  sysctl net.ipv4.tcp_congestion_control
+  返回值一般为： net.ipv4.tcp_congestion_control = bbr
+  ————————————
+  sysctl net.core.default_qdisc 
+  返回值一般为：net.core.default_qdisc = fq
+  ————————————
+  lsmod | grep bbr  返回值有 tcp_bbr 模块即说明bbr已启动。
+```
 # 更新
 ## 2018-05-24
 * 调整位置

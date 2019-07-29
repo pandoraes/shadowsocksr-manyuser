@@ -16,8 +16,8 @@ suerpvisor_conf_dir="${supervisor_dir}/conf.d"
 shadowsocks_folder="${shadowsocks_install_folder}/shadowsocksr"
 config="${shadowsocks_folder}/config.json"
 debian_sourcelist="/etc/apt/source.list"
-dir_pwd=$(pwd)
-BBR_file="${dir_pwd}/download/bash/bbr.sh"
+Server_Speeder_file="/serverspeeder/bin/serverSpeeder.sh"
+LotServer_file="/appex/bin/serverSpeeder.sh"
 
 #fonts color
 Green="\033[32m" 
@@ -203,6 +203,7 @@ check_install_ssr(){
 		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/manyuser.zip; then
 			echo -e "${Error} ShadowsocksR 后端文件下载失败 !" && exit 1
 		fi
+		[[ ! -e "manyuser.zip" ]] && echo -e "${Error} ShadowsocksR服务端 压缩包 下载失败 !" && rm -rf manyuser.zip && exit 1
 		unzip manyuser.zip && mv manyuser shadowsocksr && rm -f manyuser.zip
 		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/ssr; then
 			echo -e "${Error} ShadowsocksR 服务文件下载失败 !" && exit 1
@@ -263,7 +264,10 @@ Install_LotServer(){
 	fi
 }
 Install_BBR(){
-	if [[ ! -e ${BBR_file} ]]; then
+	tcp_bbr=`lsmod |grep -c tcp_bbr`
+	if [tcp_bbr = 1]; then
+		echo -e "${Info} BBR 已经启用无需安装 !"
+	else
 		echo -e "${Error} 没有发现 BBR脚本，开始下载..."
 		cd "${shadowsocks_install_folder}"
 		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/bbr.sh; then
@@ -272,8 +276,8 @@ Install_BBR(){
 			echo -e "${Info} BBR 脚本下载完成 !"
 			chmod +x bbr.sh
 		fi
+		bash bbr.sh
 	fi
-	bash "${BBR_file}"
 }
 SSR_installation(){
 #basic install	

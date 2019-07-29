@@ -15,7 +15,7 @@ yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&sh ssr.sh install
 # 相关目录
 
 * 后端默认安装目录：`/usr/local/shadowsocksr`
-* 配置文件默认目录  `/usr/local/shadowsocksr/config.json`  
+* 配置文件默认目录：`/usr/local/shadowsocksr/config.json`  
 * supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Centos:/etc/supervisord.conf）`
 
 # 启动方式（）

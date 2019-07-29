@@ -9,7 +9,7 @@
 # 安装方法 （ 2019/07/29 更新）
 新版本安装：
 ```
-yum install -y wget && wget -O shadowsocks_new.sh https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/shadowsocks_new.sh&&sh install.sh install | tee ssr.log
+yum install -y wget && wget -O shadowsocks_new.sh https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/shadowsocks_new.sh&&sh shadowsocks_new.sh install | tee ssr.log
 ```
 
 # 检测BBR

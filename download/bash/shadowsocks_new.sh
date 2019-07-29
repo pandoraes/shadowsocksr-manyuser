@@ -315,9 +315,6 @@ install_management(){
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;
-			5)
-				Install_BBR
-				;;
 			*)
 				echo -e "${Error} ${RedBG} 请输入正确的序号 ${Font}"
 				exit 1			

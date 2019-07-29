@@ -293,7 +293,7 @@ SSR_installation(){
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
-		echo -e "2. SSR + ServerSpeeder"
+		echo -e "1. SSR + ServerSpeeder"
 		echo -e "2. SSR + BBR"
 		echo -e "3. SSR + supervisor"
 		echo -e "4. SSR "

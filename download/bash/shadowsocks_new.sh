@@ -264,8 +264,7 @@ Install_LotServer(){
 	fi
 }
 Install_BBR(){
-	tcp_bbr=`lsmod |grep -c tcp_bbr`
-	if [tcp_bbr = 1]; then
+	if [ $(lsmod|grep -c tcp_bbr) = 1 ]; then
 		echo -e "${Info} BBR 已经启用无需安装 !"
 	else
 		echo -e "${Error} 没有发现 BBR脚本，开始下载..."

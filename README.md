@@ -6,15 +6,10 @@
 * 请注意：1.03 bate 本版本可能存在严重性问题，如果有问题请提供错误方式。
 
 
-# 安装方法 （ 2018/02/05 更新）
-```
-git clone https://github.com/pandoraes/shadowsocksr-manyuser.git SSR
-
-cd SSR
-```
+# 安装方法 （ 2019/07/29 更新）
 新版本安装：
 ```
-chmod +x shadowsocks_new.sh&&./shadowsocks_new.sh install | tee ss.log
+yum install -y wget && wget -O shadowsocks_new.sh https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/shadowsocks_new.sh&&sh install.sh install | tee ssr.log
 ```
 
 # 检测BBR

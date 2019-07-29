@@ -6,7 +6,7 @@
     "local_address": "127.0.0.1",
     "local_port": 1080,
 
-    "password": "pass",
+    "password": "pass", //单机密码
     "method": "aes-256-cfb",
     "protocol": "auth_sha1_v4",
     "protocol_param": "",

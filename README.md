@@ -28,17 +28,18 @@ supervisor 默认配置目录 ：`/etc/supervisor/conf.d/shadowsocks.conf （Cen
 * 停止  service ssr stop
 * 重启  service ssr restart
 
-# 手动检测BBR是否开启
+# BBR（手动开启）
 ```
-  uname -r                                                           查看内核版本，含有 4.9.0 就表示 OK 了
+  需要先安装所有依赖
+  uname -r   查看内核版本，含有 4.9.0 就表示 OK 了
   ————————————
-  sysctl net.ipv4.tcp_available_congestion_control  返回值一般为：net.ipv4.tcp_available_congestion_control = bbr cubic reno
+  sysctl net.ipv4.tcp_available_congestion_control
   ————————————
-  sysctl net.ipv4.tcp_congestion_control                 返回值一般为： net.ipv4.tcp_congestion_control = bbr
+  sysctl net.ipv4.tcp_congestion_control
   ————————————
-  sysctl net.core.default_qdisc                                返回值一般为：net.core.default_qdisc = fq
+  sysctl net.core.default_qdisc 
   ————————————
-  lsmod | grep bbr                                                 返回值有 tcp_bbr 模块即说明bbr已启动。
+  lsmod | grep bbr   返回值有 tcp_bbr 模块即说明bbr已启动。
 ```
 # 更新
 ## 2018-05-24

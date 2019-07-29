@@ -293,25 +293,29 @@ SSR_installation(){
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
-		echo -e "1. SSR + BBR"
-		echo -e "2. SSR + supervisor"
-		echo -e "3. SSR "
-		echo -e "4. supervisor"
+		echo -e "2. SSR + ServerSpeeder"
+		echo -e "2. SSR + BBR"
+		echo -e "3. SSR + supervisor"
+		echo -e "4. SSR "
+		echo -e "5. supervisor"
 		read -p "input:" number
 		case ${number} in
 			1)
+				Install_ServerSpeeder
+				;;
+			2)
 				SSR_installation
 				Install_BBR
 				;;
-			2)
+			3)
 				SSR_installation
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;				
-			3)
+			4)
 				SSR_installation
 				;;
-			4)
+			5)
 				supervisor_installation
 				supervisor_conf_modify_${ID}
 				;;

@@ -319,6 +319,7 @@ install_management(){
 		case ${number} in
 			1)
 				Install_LotServer
+				Install_BBR
 				;;
 			2)
 				SSR_installation

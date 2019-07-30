@@ -17,7 +17,7 @@
     
     //连接属性
     "API_INTERFACE":"sspanelv4" ,  //mudbjson, sspanelv2, sspanelv3, sspanelv3ssr, glzjinmod, legendsockssr, muapiv2(not support)
-    "UPDATE_TIME":"60",
+    "UPDATE_TIME":60,
     //如果需要管理其他的服务器，填写服务器IP和密码（这里无需填写）。
     "MANAGE_PASS":"",
     "MANAGE_BIND_IP":"127.0.0.1",

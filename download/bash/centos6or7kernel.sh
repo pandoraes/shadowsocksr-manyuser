@@ -40,13 +40,13 @@ if [ "$CentOS_RHEL_version" -eq 6 ];then
 	rpm -ivh https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/rpm/kernel-2.6.32-504.3.3.el6.x86_64.rpm --force
 	number=$(cat /boot/grub/grub.conf | awk '$1=="title" {print i++ " : " $NF}'|grep '2.6.32-504'|awk '{print $1}')
 	sed -i "s/^default=.*/default=$number/g" /boot/grub/grub.conf
-	echo -e "\033[41;36m  5秒钟后重启你的服务器  \033[0m";
+	echo -e "\033[41;36m  5秒钟后重启你的服务器 请在重启后执行 bash ssr.sh install 进行下一步安装 \033[0m";
 	sleep 5
-	
+	reboot
 else
 	rpm -ivh https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/rpm/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
 	grub2-set-default `awk -F\' '$1=="menuentry " {print i++ " : " $2}' /etc/grub2.cfg | grep '(3.10.0-229.1.2.el7.x86_64) 7 (Core)'|awk '{print $1}'`
-	echo -e "\033[41;36m  5秒钟后重启你的服务器  \033[0m";
+	echo -e "\033[41;36m  5秒钟后重启你的服务器 请在重启后执行 bash ssr.sh install 进行下一步安装 \033[0m";
 	sleep 5
-	
+	reboot
 fi

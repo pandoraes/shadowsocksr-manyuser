@@ -20,6 +20,7 @@ config="${shadowsocks_folder}/config.json"
 debian_sourcelist="/etc/apt/source.list"
 Server_Speeder_file="/serverspeeder/bin/serverSpeeder.sh"
 LotServer_file="/appex/bin/serverSpeeder.sh"
+dir_pwd=$(pwd)
 
 #fonts color
 Green="\033[32m" 
@@ -253,10 +254,11 @@ Install_ServerSpeeder(){
 	fi
 }
 Install_LotServer(){
+	cd "${dir_pwd}"
 	[[ -e ${LotServer_file} ]] && echo -e "${Error} LotServer 已安装 !" && exit 1
-	wget --no-check-certificate -qO /tmp/appex.sh "https://raw.githubusercontent.com/0oVicero0/serverSpeeder_Install/master/appex.sh"
-	[[ ! -e "/tmp/appex.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
-	bash /tmp/appex.sh 'install'
+	wget --no-check-certificate -qO appex.sh "https://raw.githubusercontent.com/0oVicero0/serverSpeeder_Install/master/appex.sh"
+	[[ ! -e "appex.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
+	bash appex.sh 'install'
 	sleep 2s
 	PID=`ps -ef |grep -v grep |grep "appex" |awk '{print $2}'`
 	if [[ ! -z ${PID} ]]; then
@@ -264,6 +266,12 @@ Install_LotServer(){
 	else
 		echo -e "${Error} LotServer 安装失败 !" && exit 1
 	fi
+}
+tryinstall_ServerSpeeder(){
+	cd "${dir_pwd}"
+	wget --no-check-certificate -qO ruisu.sh "https://blog.asuhu.com/sh/ruisu.sh"
+	[[ ! -e "ruisu.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
+	bash ruisu.sh
 }
 Install_BBR(){
 	if [ $(lsmod|grep -c tcp_bbr) = 1 ]; then

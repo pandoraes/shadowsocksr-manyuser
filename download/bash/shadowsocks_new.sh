@@ -264,7 +264,7 @@ Install_LotServer(){
 	if [[ ! -z ${PID} ]]; then
 		echo -e "${Info} LotServer 安装完成 !" && exit 1
 	else
-		echo -e "${Error} LotServer 安装失败 !" && exit 1
+		echo -e "${Error} LotServer 安装失败 !"
 		echo -e "-------------------------------------"
 		echo -e "${Info} 尝试更换内核进行安装LotServer" 
 		echo -e "-------------------------------------"

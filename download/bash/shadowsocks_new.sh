@@ -237,7 +237,7 @@ if_install(){
 }
 Install_ServerSpeeder(){
 	[[ -e ${Server_Speeder_file} ]] && echo -e "${Error} 锐速(Server Speeder) 已安装 !" && exit 1
-	cd /root
+	cd ${dir_pwd}
 	#借用91yun.rog的开心版锐速
 	wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder.sh
 	[[ ! -e "serverspeeder.sh" ]] && echo -e "${Error} 锐速安装脚本下载失败 !" && exit 1
@@ -245,9 +245,9 @@ Install_ServerSpeeder(){
 	sleep 2s
 	PID=`ps -ef |grep -v grep |grep "serverspeeder" |awk '{print $2}'`
 	if [[ ! -z ${PID} ]]; then
-		rm -rf /root/serverspeeder.sh
-		rm -rf /root/91yunserverspeeder
-		rm -rf /root/91yunserverspeeder.tar.gz
+		rm -rf ${dir_pwd}/serverspeeder.sh
+		rm -rf ${dir_pwd}/91yunserverspeeder
+		rm -rf ${dir_pwd}/91yunserverspeeder.tar.gz
 		echo -e "${Info} 锐速(Server Speeder) 安装完成 !" && exit 1
 	else
 		echo -e "${Error} 锐速(Server Speeder) 安装失败 !" && exit 1
@@ -269,16 +269,18 @@ Install_LotServer(){
 }
 tryinstall_ServerSpeeder(){
 	cd "${dir_pwd}"
-	wget --no-check-certificate -qO ruisu.sh "https://blog.asuhu.com/sh/ruisu.sh"
-	[[ ! -e "ruisu.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
-	bash ruisu.sh
+	wget --no-check-certificate -qO centos6or7kernel.sh "https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/centos6or7kernel.sh"
+	[[ ! -e "centos6or7kernel.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
+	bash centos6or7kernel.sh
+	sleep 2s
+	Install_LotServer
 }
 Install_BBR(){
 	if [ $(lsmod|grep -c tcp_bbr) = 1 ]; then
 		echo -e "${Info} BBR 已经启用无需安装 !"
 	else
 		echo -e "${Error} 没有发现 BBR脚本，开始下载..."
-		cd "${shadowsocks_install_folder}"
+		cd "${dir_pwd}"
 		if ! wget -N --no-check-certificate https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/bbr.sh; then
 			echo -e "${Error} BBR 脚本下载失败 !" && exit 1
 		else
@@ -303,7 +305,7 @@ SSR_installation(){
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
-		echo -e "1. SSR + ServerSpeeder"
+		echo -e "1. SSR + LotServer"
 		echo -e "2. SSR + BBR"
 		echo -e "3. SSR + supervisor"
 		echo -e "4. SSR "
@@ -311,7 +313,7 @@ install_management(){
 		read -p "input:" number
 		case ${number} in
 			1)
-				Install_ServerSpeeder
+				Install_LotServer
 				;;
 			2)
 				SSR_installation

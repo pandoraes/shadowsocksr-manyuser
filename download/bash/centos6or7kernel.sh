@@ -1,6 +1,7 @@
 #!/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
+
 cores=$(cat /proc/cpuinfo | grep 'model name'| wc -l)
 cname=$( cat /proc/cpuinfo | grep 'model name' | uniq | awk -F : '{print $2}')
 tram=$( free -m | awk '/Mem/ {print $2}' )

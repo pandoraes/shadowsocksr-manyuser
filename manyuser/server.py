@@ -27,7 +27,6 @@ if __name__ == '__main__':
 import server_pool
 import db_transfer
 from shadowsocks import shell
-from configloader import load_config, get_config
 
 class MainThread(threading.Thread):
 	def __init__(self, obj):

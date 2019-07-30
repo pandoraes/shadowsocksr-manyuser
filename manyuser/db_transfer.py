@@ -7,7 +7,6 @@ import sys
 from server_pool import ServerPool
 import traceback
 from shadowsocks import common, shell, lru_cache, obfs
-from configloader import load_config, get_config
 import importloader
 
 switchrule = None
@@ -241,7 +240,6 @@ class TransferBase(object):
 
 		try:
 			while True:
-				load_config()
 				db_instance.load_cfg()
 				try:
 					db_instance.push_db_all_user()
@@ -579,12 +577,13 @@ class Dbv3Transfer(DbTransfer):
 class MuJsonTransfer(TransferBase):
 	def __init__(self):
 		super(MuJsonTransfer, self).__init__()
+		config = shell.get_config(False)
 
 	def update_all_user(self, dt_transfer):
 		import json
 		rows = None
 
-		config_path = get_config().MUDB_FILE
+		config_path = config["MUDB_FILE"]
 		with open(config_path, 'rb+') as f:
 			rows = json.loads(f.read().decode('utf8'))
 			for row in rows:
@@ -606,7 +605,7 @@ class MuJsonTransfer(TransferBase):
 		import json
 		rows = None
 
-		config_path = get_config().MUDB_FILE
+		config_path = config["MUDB_FILE"]
 		with open(config_path, 'rb+') as f:
 			rows = json.loads(f.read().decode('utf8'))
 			for row in rows:

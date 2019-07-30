@@ -3,7 +3,6 @@
 
 import traceback
 from shadowsocks import shell, common
-from configloader import load_config, get_config
 import random
 import getopt
 import sys

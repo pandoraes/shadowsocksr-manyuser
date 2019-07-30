@@ -30,7 +30,6 @@ import threading
 import sys
 import traceback
 from socket import *
-from configloader import load_config, get_config
 
 class MainThread(threading.Thread):
 	def __init__(self, params):
@@ -171,7 +170,7 @@ class ServerPool(object):
 		logging.info("del server at %d" % port)
 		try:
 			udpsock = socket(AF_INET, SOCK_DGRAM)
-			udpsock.sendto('%s:%s:0:0' % (get_config().MANAGE_PASS, port), (get_config().MANAGE_BIND_IP, get_config().MANAGE_PORT))
+			udpsock.sendto('%s:%s:0:0' % (self.config['MANAGE_PASS'], port), (self.config['MANAGE_BIND_IP'], self.config['MANAGE_PORT']))
 			udpsock.close()
 		except Exception as e:
 			logging.warn(e)

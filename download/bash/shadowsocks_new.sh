@@ -268,6 +268,7 @@ Install_LotServer(){
 		echo -e "-------------------------------------"
 		echo -e "${Info} 尝试更换内核进行安装LotServer" 
 		echo -e "-------------------------------------"
+		sleep 2s
 		tryinstall_ServerSpeeder
 	fi
 }

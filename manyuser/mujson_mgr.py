@@ -36,15 +36,23 @@ class MuJsonLoader(object):
 
 class MuMgr(object):
 	def __init__(self):
-		self.config_path = get_config().MUDB_FILE
+		self.muconfig = {}
+		self.load_muconfig()
+		self.config_path = self.muconfig["MUDB_FILE"]
 		try:
-			self.server_addr = get_config().SERVER_PUB_ADDR
+			self.server_addr = self.muconfig["SERVER_PUB_ADDR"]
 		except:
 			self.server_addr = '127.0.0.1'
 		self.data = MuJsonLoader()
 
 		if self.server_addr == '127.0.0.1':
 			self.server_addr = self.getipaddr()
+
+	def load_muconfig(self):
+		muconfig = shell.get_config(False)
+
+		if muconfig:
+			self.muconfig.update(muconfig)
 
 	def getipaddr(self, ifname='eth0'):
 		import socket

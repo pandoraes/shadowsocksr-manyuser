@@ -265,7 +265,7 @@ class TransferBase(object):
 					trace = traceback.format_exc()
 					logging.error(trace)
 					#logging.warn('db thread except:%s' % e)
-				if db_instance.event.wait(get_config().UPDATE_TIME) or not ServerPool.get_instance().thread.is_alive():
+				if db_instance.event.wait(config['UPDATE_TIME']) or not ServerPool.get_instance().thread.is_alive():
 					break
 		except KeyboardInterrupt as e:
 			pass
@@ -408,15 +408,15 @@ class DbTransfer(TransferBase):
 class Dbv3Transfer(DbTransfer):
 	def __init__(self):
 		super(Dbv3Transfer, self).__init__()
-		self.update_node_state = True if get_config().API_INTERFACE != 'legendsockssr' else False
+		self.update_node_state = True if self.cfg["API_INTERFACE"]  != 'legendsockssr' else False
 		if self.update_node_state:
 			self.key_list += ['id']
 		self.key_list += ['method']
 		if self.update_node_state:
 			self.ss_node_info_name = 'ss_node_info_log'
-			if get_config().API_INTERFACE == 'sspanelv3ssr':
+			if self.cfg["API_INTERFACE"] == 'sspanelv3ssr':
 				self.key_list += ['obfs', 'protocol']
-			if get_config().API_INTERFACE == 'glzjinmod':
+			if self.cfg["API_INTERFACE"]  == 'glzjinmod':
 				self.key_list += ['obfs', 'protocol']
 				self.ss_node_info_name = 'ss_node_info'
 		else:

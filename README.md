@@ -6,7 +6,7 @@
 * 请注意：1.03 bate 本版本可能存在严重性问题，如果有问题请提供错误方式。
 
 
-# 安装方法 （ 2019/07/29 更新）
+# 安装方法 （ 2019/07/30 更新）
 新版本安装：
 ```
 yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&bash ssr.sh install
@@ -40,6 +40,9 @@ yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&bash ssr.sh insta
   lsmod|grep bbr   返回值有tcp_bbr模块即说明bbr已启动。
 ```
 # 更新
+## 2019-07-30
+* 整合配置文件
+
 ## 2019-07-29
 * 细微调整
 

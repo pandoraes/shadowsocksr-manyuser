@@ -9,7 +9,7 @@
 # 安装方法 （ 2019/07/29 更新）
 新版本安装：
 ```
-yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&sh ssr.sh install
+yum install -y wget && wget -O ssr.sh https://dwz.cn/XIwEZC72&&bash ssr.sh install
 ```
 
 # 相关目录

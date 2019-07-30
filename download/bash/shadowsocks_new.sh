@@ -265,12 +265,16 @@ Install_LotServer(){
 		echo -e "${Info} LotServer 安装完成 !" && exit 1
 	else
 		echo -e "${Error} LotServer 安装失败 !" && exit 1
+		echo -e "-------------------------------------"
+		echo -e "${Info} 尝试更换内核进行安装LotServer" 
+		echo -e "-------------------------------------"
+		tryinstall_ServerSpeeder
 	fi
 }
 tryinstall_ServerSpeeder(){
 	cd "${dir_pwd}"
 	wget --no-check-certificate -qO centos6or7kernel.sh "https://raw.githubusercontent.com/pandoraes/shadowsocksr-manyuser/master/download/bash/centos6or7kernel.sh"
-	[[ ! -e "centos6or7kernel.sh" ]] && echo -e "${Error} LotServer 安装脚本下载失败 !" && exit 1
+	[[ ! -e "centos6or7kernel.sh" ]] && echo -e "${Error} 内核脚本下载失败 !" && exit 1
 	bash centos6or7kernel.sh
 	sleep 2s
 	Install_LotServer

@@ -6,7 +6,7 @@
 	"db": "baiduDB",        //数据库名称
     "dbuser": "root",       //数据库帐号
     "dbpass": "123456",     //数据库密码
-    "node_id": 3,
+    "node_id": 3,			//本服务ID
     "transfer_mul": 1.0,
     "ssl_enable": 0,
     "ssl_ca": "",
@@ -21,11 +21,11 @@
     //如果需要管理其他的服务器，填写服务器IP和密码（这里无需填写）。
     "MANAGE_PASS":"",
     "MANAGE_BIND_IP":"127.0.0.1",
-    "MANAGE_PORT":23333,
+    "MANAGE_PORT":33333,
     //mudb
     "MUDB_FILE":"mudb.json",
     "SERVER_PUB_ADDR":"127.0.0.1", // mujson_mgr need this to generate ssr link
-    //本地SSR服务
+    //单机SSR服务
     "server": "0.0.0.0",
     "server_ipv6": "::",
     "server_port": 10743,

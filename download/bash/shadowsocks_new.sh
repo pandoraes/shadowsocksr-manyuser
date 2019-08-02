@@ -306,7 +306,14 @@ SSR_installation(){
 	echo -e "${OK} ${GreenBG} SSR manyuser 安装完成 ${Font}"
 	sleep 1
 }
-
+basic_kpatch(){
+	if [[ ${ID} == "centos" || ${ID} == "amzn" || ${ID} == "rhel" || ${ID} == "fedora" ]]; then
+		UNAME=$(uname -r)
+		sudo ${INS} install gcc kernel-devel-${UNAME%.*} elfutils elfutils-devel
+	elif [[ ${ID} == "ubuntu" ]]; then
+		${INS} install make gcc libelf-dev
+	fi
+}
 install_management(){
 		check_system
 		echo -e "${Red} 请选择安装内容 ${Font}"
